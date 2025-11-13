@@ -1,73 +1,276 @@
-# Welcome to your Lovable project
+# 📁 SecureShare — Encrypted File Sharing Platform
 
-## Project info
+SecureShare is a secure, privacy-focused file-sharing web application that encrypts files **client-side** before they ever leave your device. Users can upload encrypted files and share them through **time-limited**, **password-protected**, and **download-limited** secure links.
 
-**URL**: https://lovable.dev/projects/fe6869fc-2e55-431d-8dad-ec1895d4b30f
+Built using **React + TypeScript**, **Vite**, **Supabase**, and the **Web Crypto API**, SecureShare is designed for privacy-conscious individuals who need strong file security with simple user experience.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Features
 
-**Use Lovable**
+### 🔒 Client-Side Encryption
+- AES-256-GCM encryption performed **in the browser**
+- Supabase never sees unencrypted files
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fe6869fc-2e55-431d-8dad-ec1895d4b30f) and start prompting.
+### ⏰ Smart Expiration
+- Share links expire in **1, 24, 48, or 72 hours**
 
-Changes made via Lovable will be committed automatically to this repo.
+### 📉 Download Limits
+- Restrict downloads from **1 to 100** times
 
-**Use your preferred IDE**
+### 🔗 Secure Share Links
+- Unique, cryptographically random URLs  
+- Optional password protection
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📁 File Management Dashboard
+- View uploaded files  
+- Track download counts  
+- Delete items  
+- Regenerate secure share links  
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🛡️ Security
+- **Row-Level Security (RLS)** ensuring isolation  
+- Executables blocked (.exe, .bat, .sh, etc.)  
+- 20MB max file size  
+- IP-based download tracking  
+- Email/Magic link authentication
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 🏗️ Tech Stack
 
-# Step 3: Install the necessary dependencies.
-npm i
+### **Frontend**
+- React (TypeScript)
+- Vite
+- Tailwind CSS + shadcn/ui
+- Web Crypto API (AES-256-GCM)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### **Backend**
+- Supabase Auth
+- Supabase PostgreSQL
+- Supabase Storage
+- Supabase RLS
+- Supabase Edge Functions
+
+### **Local Dev**
+- Supabase Local (Docker)
+- Mailpit (local SMTP testing)
+
+---
+
+# 📦 Local Development Setup
+
+Follow these steps on fresh Linux Mint or Ubuntu.
+
+---
+
+## 1️⃣ Install Docker
+
+```bash
+sudo apt update
+sudo apt install -y docker.io
+sudo usermod -aG docker $USER
+newgrp docker
+````
+
+Verify:
+
+```bash
+docker run hello-world
+```
+
+---
+
+## 2️⃣ Install Supabase CLI (via Homebrew)
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+brew install supabase/tap/supabase
+```
+
+Verify:
+
+```bash
+supabase --version
+```
+
+---
+
+# ▶️ Start Supabase Local
+
+```bash
+supabase start
+```
+
+You’ll get:
+
+| Service  | URL                                                     |
+| -------- | ------------------------------------------------------- |
+| API      | [http://127.0.0.1:54321](http://127.0.0.1:54321)        |
+| Studio   | [http://127.0.0.1:54323](http://127.0.0.1:54323)        |
+| Mailpit  | [http://127.0.0.1:54324](http://127.0.0.1:54324)        |
+| Database | postgresql://postgres:postgres@127.0.0.1:54322/postgres |
+
+---
+
+# ⚙️ Required Supabase Config (config.toml)
+
+Use this **exact working version**:
+
+```toml
+project_id = "mlfclynxysgrnhpezguj"
+
+#######################################
+# Auth Configuration
+#######################################
+
+[auth]
+site_url = "http://localhost:8080"
+additional_redirect_urls = ["http://localhost:8080"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = false
+max_frequency = "1m"
+
+[auth.sms]
+enable_signup = false
+
+# ---- OAuth Providers (Disabled) ----
+[auth.external.github]    enabled = false
+[auth.external.google]    enabled = false
+[auth.external.gitlab]    enabled = false
+[auth.external.bitbucket] enabled = false
+[auth.external.linkedin]  enabled = false
+[auth.external.facebook]  enabled = false
+[auth.external.twitter]   enabled = false
+[auth.external.discord]   enabled = false
+[auth.external.apple]     enabled = false
+[auth.external.slack]     enabled = false
+[auth.external.spotify]   enabled = false
+[auth.external.twitch]    enabled = false
+[auth.external.notion]    enabled = false
+[auth.external.azure]     enabled = false
+[auth.external.keycloak]  enabled = false
+[auth.external.zulip]     enabled = false
+```
+
+Restart after changes:
+
+```bash
+supabase stop
+supabase start
+```
+
+---
+
+# ▶️ Start Frontend
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run dev:
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+http://localhost:8080
+```
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# 🔐 Environment Variables
 
-## What technologies are used for this project?
+Create `.env.local`:
 
-This project is built with:
+```env
+VITE_SUPABASE_URL=http://127.0.0.1:54321
+VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY_HERE
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Get your anon key:
 
-## How can I deploy this project?
+```bash
+supabase status
+```
 
-Simply open [Lovable](https://lovable.dev/projects/fe6869fc-2e55-431d-8dad-ec1895d4b30f) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+# 🧹 Resetting Supabase Local
 
-Yes, you can!
+## Delete all users:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Open Studio → SQL → run:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```sql
+delete from auth.users;
+delete from auth.identities;
+```
+
+## Full reset:
+
+```bash
+supabase stop
+docker volume ls | grep mlfclynxysgrnhpezguj
+docker volume rm <volume_name>
+supabase start
+```
+
+---
+
+# 🛫 Deploying to Production
+
+## 1. Link project
+
+```bash
+supabase link --project-ref <PROJECT_ID>
+```
+
+## 2. Deploy DB
+
+```bash
+supabase db push
+```
+
+## 3. Deploy Frontend
+
+Build:
+
+```bash
+npm run build
+```
+
+Deploy the `dist/` folder to:
+
+* Lovable (recommended)
+* Vercel
+* Netlify
+* Cloudflare Pages
+
+---
+
+# 🤝 Contributing
+
+PRs welcome!
+Feature suggestions encouraged.
+
+---
+
+# 📄 License
+
+MIT License © 2025 SecureShare
+
+```
